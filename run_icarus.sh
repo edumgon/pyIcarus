@@ -18,6 +18,9 @@ python_package_installed() {
   python3 -c "import $1" >/dev/null 2>&1
 }
 
+# Store all command line arguments to pass to the Python script
+ARGS="$@"
+
 # Check if Python is installed
 if ! command_exists python3; then
   echo -e "${RED}Python 3 is not installed. Please install Python 3 and try again.${NC}"
@@ -45,7 +48,7 @@ if python_package_installed gi; then
   
   if [ $MISSING_PACKAGES -eq 0 ]; then
     echo -e "${GREEN}All GTK requirements are satisfied. Starting GTK application...${NC}"
-    python3 ponto_app_gtk.py
+    python3 ponto_app_gtk.py $ARGS
     exit 0
   else
     echo -e "${YELLOW}Installing missing requirements...${NC}"
@@ -54,7 +57,7 @@ if python_package_installed gi; then
     # Check if installation was successful
     if [ $? -eq 0 ]; then
       echo -e "${GREEN}Requirements installed successfully. Starting GTK application...${NC}"
-      python3 ponto_app_gtk.py
+      python3 ponto_app_gtk.py $ARGS
       exit 0
     else
       echo -e "${RED}Failed to install requirements. Please install them manually.${NC}"
@@ -88,7 +91,7 @@ elif python_package_installed PyQt6; then
   
   if [ $MISSING_PACKAGES -eq 0 ]; then
     echo -e "${GREEN}All PyQt requirements are satisfied. Starting PyQt application...${NC}"
-    python3 ponto_app_pyqt.py
+    python3 ponto_app_pyqt.py $ARGS
     exit 0
   else
     echo -e "${YELLOW}Installing missing requirements...${NC}"
@@ -97,7 +100,7 @@ elif python_package_installed PyQt6; then
     # Check if installation was successful
     if [ $? -eq 0 ]; then
       echo -e "${GREEN}Requirements installed successfully. Starting PyQt application...${NC}"
-      python3 ponto_app_pyqt.py
+      python3 ponto_app_pyqt.py $ARGS
       exit 0
     else
       echo -e "${RED}Failed to install requirements. Please install them manually.${NC}"
@@ -110,7 +113,7 @@ else
   
   if [ $? -eq 0 ]; then
     echo -e "${GREEN}PyQt requirements installed successfully. Starting PyQt application...${NC}"
-    python3 ponto_app_pyqt.py
+    python3 ponto_app_pyqt.py $ARGS
     exit 0
   else
     echo -e "${RED}Failed to install PyQt requirements. Please install them manually.${NC}"
