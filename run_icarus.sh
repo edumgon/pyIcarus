@@ -6,6 +6,9 @@ RED='\033[0;31m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
+# Get the directory where the script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+
 echo -e "${YELLOW}Checking environment for pyIcarus...${NC}"
 
 # Function to check if a command exists
@@ -48,16 +51,16 @@ if python_package_installed gi; then
   
   if [ $MISSING_PACKAGES -eq 0 ]; then
     echo -e "${GREEN}All GTK requirements are satisfied. Starting GTK application...${NC}"
-    python3 ponto_app_gtk.py $ARGS
+    python3 "${SCRIPT_DIR}/ponto_app_gtk.py" $ARGS
     exit 0
   else
     echo -e "${YELLOW}Installing missing requirements...${NC}"
-    pip3 install -r requirements.txt
+    pip3 install -r "${SCRIPT_DIR}/requirements.txt"
     
     # Check if installation was successful
     if [ $? -eq 0 ]; then
       echo -e "${GREEN}Requirements installed successfully. Starting GTK application...${NC}"
-      python3 ponto_app_gtk.py $ARGS
+      python3 "${SCRIPT_DIR}/ponto_app_gtk.py" $ARGS
       exit 0
     else
       echo -e "${RED}Failed to install requirements. Please install them manually.${NC}"
@@ -91,16 +94,16 @@ elif python_package_installed PyQt6; then
   
   if [ $MISSING_PACKAGES -eq 0 ]; then
     echo -e "${GREEN}All PyQt requirements are satisfied. Starting PyQt application...${NC}"
-    python3 ponto_app_pyqt.py $ARGS
+    python3 "${SCRIPT_DIR}/ponto_app_pyqt.py" $ARGS
     exit 0
   else
     echo -e "${YELLOW}Installing missing requirements...${NC}"
-    pip3 install -r requirements_pyqt.txt
+    pip3 install -r "${SCRIPT_DIR}/requirements_pyqt.txt"
     
     # Check if installation was successful
     if [ $? -eq 0 ]; then
       echo -e "${GREEN}Requirements installed successfully. Starting PyQt application...${NC}"
-      python3 ponto_app_pyqt.py $ARGS
+      python3 "${SCRIPT_DIR}/ponto_app_pyqt.py" $ARGS
       exit 0
     else
       echo -e "${RED}Failed to install requirements. Please install them manually.${NC}"
@@ -109,11 +112,11 @@ elif python_package_installed PyQt6; then
   fi
 else
   echo -e "${YELLOW}No GUI environment detected. Installing PyQt by default...${NC}"
-  pip3 install -r requirements_pyqt.txt
+  pip3 install -r "${SCRIPT_DIR}/requirements_pyqt.txt"
   
   if [ $? -eq 0 ]; then
     echo -e "${GREEN}PyQt requirements installed successfully. Starting PyQt application...${NC}"
-    python3 ponto_app_pyqt.py $ARGS
+    python3 "${SCRIPT_DIR}/ponto_app_pyqt.py" $ARGS
     exit 0
   else
     echo -e "${RED}Failed to install PyQt requirements. Please install them manually.${NC}"

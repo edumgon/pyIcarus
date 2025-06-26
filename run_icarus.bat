@@ -1,6 +1,11 @@
 @echo off
 setlocal enabledelayedexpansion
 
+:: Get the directory where the batch file is located
+set "SCRIPT_DIR=%~dp0"
+:: Remove trailing backslash
+set "SCRIPT_DIR=%SCRIPT_DIR:~0,-1%"
+
 echo Checking environment for pyIcarus...
 
 :: Check if Python is installed
@@ -45,16 +50,16 @@ if %ERRORLEVEL% EQU 0 (
     
     if !MISSING_PACKAGES! EQU 0 (
         echo All GTK requirements are satisfied. Starting GTK application...
-        python ponto_app_gtk.py
+        python "%SCRIPT_DIR%\ponto_app_gtk.py"
         exit /b 0
     ) else (
         echo Installing missing requirements...
-        pip install -r requirements.txt
+        pip install -r "%SCRIPT_DIR%\requirements.txt"
         
         :: Check if installation was successful
         if %ERRORLEVEL% EQU 0 (
             echo Requirements installed successfully. Starting GTK application...
-            python ponto_app_gtk.py
+            python "%SCRIPT_DIR%\ponto_app_gtk.py"
             exit /b 0
         ) else (
             echo Failed to install requirements. Please install them manually.
@@ -94,16 +99,16 @@ if %ERRORLEVEL% EQU 0 (
         
         if !MISSING_PACKAGES! EQU 0 (
             echo All PyQt requirements are satisfied. Starting PyQt application...
-            python ponto_app_pyqt.py
+            python "%SCRIPT_DIR%\ponto_app_pyqt.py"
             exit /b 0
         ) else (
             echo Installing missing requirements...
-            pip install -r requirements_pyqt.txt
+            pip install -r "%SCRIPT_DIR%\requirements_pyqt.txt"
             
             :: Check if installation was successful
             if %ERRORLEVEL% EQU 0 (
                 echo Requirements installed successfully. Starting PyQt application...
-                python ponto_app_pyqt.py
+                python "%SCRIPT_DIR%\ponto_app_pyqt.py"
                 exit /b 0
             ) else (
                 echo Failed to install requirements. Please install them manually.
@@ -113,11 +118,11 @@ if %ERRORLEVEL% EQU 0 (
         )
     ) else (
         echo No GUI environment detected. Installing PyQt by default...
-        pip install -r requirements_pyqt.txt
+        pip install -r "%SCRIPT_DIR%\requirements_pyqt.txt"
         
         if %ERRORLEVEL% EQU 0 (
             echo PyQt requirements installed successfully. Starting PyQt application...
-            python ponto_app_pyqt.py
+            python "%SCRIPT_DIR%\ponto_app_pyqt.py"
             exit /b 0
         ) else (
             echo Failed to install PyQt requirements. Please install them manually.
