@@ -139,7 +139,15 @@ class PontoBackend:
             if login_response.status_code != 200:
                 return False, f"Falha na autenticação: {login_response.status_code}", current_time
             
-            auth_data = login_response.json()
+            # Check if response has content before parsing JSON
+            if not login_response.text.strip():
+                return False, "Resposta de autenticação vazia", current_time
+                
+            try:
+                auth_data = login_response.json()
+            except ValueError as json_err:
+                return False, f"Erro ao processar resposta de autenticação: {json_err}", current_time
+            
             token = auth_data.get('token')
             
             if not token:
@@ -161,19 +169,35 @@ class PontoBackend:
             # Send authenticated request
             headers = {
                 "Authorization": f"Bearer {token}",
-                "Content-Type": "application/json"
+                "Content-Type": "application/json; charset=UTF-8"
             }
             
             # Make register time API request
             register_response = requests.post(register_url, json=register_data, headers=headers)
-            result = register_response.json()
             
-            message = result.get('message', 'Sem mensagem do servidor')
-            current_datetime = now.strftime("%d/%m/%Y %H:%M:%S")
-            
+            # Handle successful response codes
             if register_response.status_code == 200 or register_response.status_code == 201:
-                return True, message, current_time
+                # Check if response is plain text "ok"
+                if register_response.text.strip().lower() == "ok":
+                    return True, "Ponto registrado com sucesso", current_time
+                    
+                # Try to parse as JSON if not plain "ok"
+                try:
+                    result = register_response.json()
+                    message = result.get('message', 'Ponto registrado com sucesso')
+                    return True, message, current_time
+                except ValueError:
+                    # If can't parse as JSON but status code is success, consider it successful
+                    return True, "Ponto registrado com sucesso", current_time
             else:
+                # Handle error responses
+                try:
+                    result = register_response.json()
+                    message = result.get('message', 'Erro ao registrar ponto')
+                except ValueError:
+                    # If can't parse error as JSON, use response text or status code
+                    message = register_response.text.strip() if register_response.text.strip() else f"Erro {register_response.status_code}"
+                
                 return False, message, current_time
         
         except Exception as e:
