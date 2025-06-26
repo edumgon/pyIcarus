@@ -16,19 +16,11 @@ if %ERRORLEVEL% NEQ 0 (
     exit /b 1
 )
 
-:: Function to check if a Python package is installed
-:check_package
-set package=%~1
-python -c "import %package%" >nul 2>&1
-if %ERRORLEVEL% EQU 0 (
-    exit /b 0
-) else (
-    exit /b 1
-)
-
 :: Check for GTK environment first
-call :check_package gi
-if %ERRORLEVEL% EQU 0 (
+python -c "import gi" >nul 2>&1
+set GTK_AVAILABLE=%ERRORLEVEL%
+
+if %GTK_AVAILABLE% EQU 0 (
     echo GTK environment detected.
     
     :: Check GTK requirements
@@ -69,8 +61,10 @@ if %ERRORLEVEL% EQU 0 (
     )
 ) else (
     :: Check for PyQt environment
-    call :check_package PyQt6
-    if %ERRORLEVEL% EQU 0 (
+    python -c "import PyQt6" >nul 2>&1
+    set PYQT_AVAILABLE=%ERRORLEVEL%
+    
+    if %PYQT_AVAILABLE% EQU 0 (
         echo PyQt environment detected.
         
         :: Check PyQt requirements
