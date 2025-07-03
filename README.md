@@ -8,7 +8,7 @@ O pyIcarus é uma ferramenta que automatiza o processo de registro de ponto de t
 
 ## Tecnologias Utilizadas
 
-- **Linguagem**: Python 3
+- **Linguagem**: Python 3.12+
 - **Interfaces Gráficas**:
   - GTK 3 (para ambientes Linux/GNOME)
   - PyQt6 (para Windows e outros ambientes)
@@ -17,13 +17,13 @@ O pyIcarus é uma ferramenta que automatiza o processo de registro de ponto de t
 ## Requisitos
 
 ### Linux
-- Python 3.6+
+- Python 3.12+
 - PyGObject (para interface GTK)
 - PyQt6 (alternativa para ambientes sem GTK)
 - Bibliotecas: requests, cryptography
 
 ### Windows
-- Python 3.6+
+- Python 3.12+
 - PyQt6
 - Bibliotecas: requests, cryptography
 
