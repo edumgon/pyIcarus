@@ -11,6 +11,13 @@ import requests
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+import geocoder
+
+def get_current_location():
+    g = geocoder.ip('me')
+    if g.ok:
+        return g.lat, g.lng
+    return None, None
 
 
 class PontoBackend:
@@ -156,15 +163,30 @@ class PontoBackend:
             id_mutuario = auth_data.get('employee', [{}])[0].get('idMutuario')
             if not id_mutuario:
                 return False, "Falha ao obter idMutuario", current_time
-            
-            # Data to send for clock in/out
+
+            # Get real location
+            latitude, longitude = get_current_location()  # or get_location()
+
+            # Fallback to default values if location couldn't be determined
+            if latitude is None or longitude is None:
+                latitude, longitude = -27.572293, -48.5095271  # Keep your current defaults
+
             register_data = {
                 "idMutuario": id_mutuario,
-                "latitude": -27.572293,
-                "longitude": -48.5095271,
-                "precisao": 42.5,
+                "latitude": latitude,
+                "longitude": longitude,
+                "precisao": 42.5,  # You might want to get real accuracy too
                 "meioBatida": "NAVEGADOR"
             }
+
+            # Data to send for clock in/out
+#            register_data = {
+#                "idMutuario": id_mutuario,
+#                "latitude": -27.572293,
+#                "longitude": -48.5095271,
+#                "precisao": 42.5,
+#                "meioBatida": "NAVEGADOR"
+#            }
             
             # Send authenticated request
             headers = {

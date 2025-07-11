@@ -1,3 +1,5 @@
 PyQt6>=6.5.0
 requests>=2.25.1
 cryptography>=3.4.0
+geocoder>=1.38.1
+
