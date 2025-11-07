@@ -60,6 +60,16 @@ pip install -r requirements_pyqt.txt
 run_icarus.bat
 ```
 
+### MacOS
+
+```bash
+# Torne o script executável
+chmod +x run_icarus.sh
+
+# Execute o script
+./run_icarus.sh
+``` 
+
 ## Uso
 
 O script de inicialização detectará automaticamente o ambiente disponível (GTK ou PyQt) e iniciará a versão apropriada do aplicativo:
@@ -133,6 +143,15 @@ crontab -e
 3. Configure para executar nos horários desejados (ex: 8h, 12h, 13h, 17h)
 4. Selecione o arquivo `run_icarus.bat` como programa a ser executado
 5. Adicione o parâmetro `--auto` para registro automático
+
+### MacOS
+
+### Para criar um executavel 
+```bash
+pip3 install pyinstaller
+pyinstaller --windowed --onefile ponto_app_pyqt.py
+```
+
 
 ## Funcionalidades
 
